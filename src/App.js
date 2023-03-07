@@ -1,31 +1,38 @@
-import {useEffect, useState} from "react"
-import React from 'react';
-import AddTodoForm from './AddTodoForm';
-import TodoList from './TodoList';
+import { useEffect, useState } from "react";
+import React from "react";
+import AddTodoForm from "./AddTodoForm";
+import TodoList from "./TodoList";
 
 const useSemiPersistentState = () => {
   const [todoList, setTodoList] = React.useState(
-    JSON.parse(localStorage.getItem("savedTodoList")));
-  
-  useEffect(() => {
-    localStorage.setItem("savedTodoList", JSON.stringify(todoList))}, [todoList]
+    JSON.parse(localStorage.getItem("savedTodoList"))
   );
 
+  useEffect(() => {
+    localStorage.setItem("savedTodoList", JSON.stringify(todoList));
+  }, [todoList]);
+
   return [todoList, setTodoList];
-}
+};
 
 function App() {
   const [todoList, setTodoList] = useSemiPersistentState();
-  
-  function addTodo(newTodo) {
-    setTodoList([...todoList, newTodo])
+
+  const addTodo = (newTodo) => {
+    setTodoList((previousTodoList) => [...previousTodoList, newTodo]);
+  };
+
+  function removeTodo(id) {
+    setTodoList((filteredArray) =>
+      filteredArray.filter((todo) => todo.id !== id)
+    );
   }
-  
+
   return (
     <>
       <h1>Todo List</h1>
       <AddTodoForm onAddTodo={addTodo} />
-      <TodoList todoList={todoList} />
+      <TodoList todoList={todoList} onRemoveTodo={removeTodo} />
     </>
   );
 }
