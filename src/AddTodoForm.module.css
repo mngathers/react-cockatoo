@@ -1,0 +1,12 @@
+form {
+  display: flex;
+  justify-content: space-around;
+}
+
+label {
+  font-weight: bold;
+}
+
+#submit {
+  padding: 0px 20px;
+}
