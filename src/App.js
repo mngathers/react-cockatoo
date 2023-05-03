@@ -34,13 +34,49 @@ function App() {
   }, [todoList]);
 
   const addTodo = (newTodo) => {
-    setTodoList((previousTodoList) => [...previousTodoList, newTodo]);
+    const airtableData = {
+      fields: {
+        Title: newTodo.title,
+      },
+    };
+
+    fetch(
+      `https://api.airtable.com/v0/${process.env.REACT_APP_AIRTABLE_BASE_ID}/${process.env.REACT_APP_TABLE_ID}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.REACT_APP_AIRTABLE_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(airtableData),
+      }
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        setTodoList((todoList) => [...todoList, airtableData]);
+      });
   };
 
   function removeTodo(id) {
-    setTodoList((filteredArray) =>
-      filteredArray.filter((todo) => todo.id !== id)
-    );
+    fetch(
+      `https://api.airtable.com/v0/${process.env.REACT_APP_AIRTABLE_BASE_ID}/${process.env.REACT_APP_TABLE_ID}/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${process.env.REACT_APP_AIRTABLE_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.deleted) {
+          console.log(result);
+          setTodoList((filteredArray) =>
+            filteredArray.filter((todo) => todo.id !== result.id)
+          );
+        }
+      });
   }
 
   return (
