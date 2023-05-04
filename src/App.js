@@ -53,7 +53,7 @@ function App() {
     )
       .then((response) => response.json())
       .then((result) => {
-        setTodoList((todoList) => [...todoList, airtableData]);
+        setTodoList((todoList) => [...todoList, result]);
       });
   };
 
