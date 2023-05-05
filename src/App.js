@@ -11,7 +11,7 @@ function App() {
 
   useEffect(() => {
     fetch(
-      `https://api.airtable.com/v0/${process.env.REACT_APP_AIRTABLE_BASE_ID}/Default`,
+      `https://api.airtable.com/v0/${process.env.REACT_APP_AIRTABLE_BASE_ID}/${process.env.REACT_APP_TABLE_ID}/?view=Grid%20view&sort[0][field]=Title&sort[0][direction]=asc`,
       {
         headers: {
           Authorization: `Bearer ${process.env.REACT_APP_AIRTABLE_API_KEY}`,
@@ -21,6 +21,25 @@ function App() {
       .then((response) => response.json())
       .then((result) => {
         console.log(result.records);
+        result
+          ? result.records.sort((objectA, objectB) => {
+              if (objectA.fields.Title < objectB.fields.Title) {
+                return -1;
+              } else if (objectA.fields.Title === objectB.fields.Title) {
+                return 0;
+              } else {
+                return 1;
+              }
+            })
+          : result.records.sort((objectA, objectB) => {
+              if (objectA.fields.Title < objectB.fields.Title) {
+                return 1;
+              } else if (objectA === objectB) {
+                return 0;
+              } else {
+                return -1;
+              }
+            });
         setTodoList(result.records);
         setIsLoading(false);
       })
