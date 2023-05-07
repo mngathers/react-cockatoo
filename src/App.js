@@ -8,6 +8,7 @@ import styles from "./App.module.css";
 function App() {
   const [todoList, setTodoList] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [order, setOrder] = React.useState(true);
 
   useEffect(() => {
     fetch(
@@ -21,7 +22,8 @@ function App() {
       .then((response) => response.json())
       .then((result) => {
         console.log(result.records);
-        result
+
+        order
           ? result.records.sort((objectA, objectB) => {
               if (objectA.fields.Title < objectB.fields.Title) {
                 return -1;
@@ -44,7 +46,7 @@ function App() {
         setIsLoading(false);
       })
       .catch((error) => console.log(error.message));
-  }, []);
+  }, [order]);
 
   useEffect(() => {
     if (!isLoading) {
@@ -73,6 +75,10 @@ function App() {
       .then((response) => response.json())
       .then((result) => {
         setTodoList((todoList) => [...todoList, result]);
+        setOrder((order) => [...todoList, order]);
+        if (!order) {
+          const defaultURL = `https://api.airtable.com/v0/${process.env.REACT_APP_AIRTABLE_BASE_ID}/${process.env.REACT_APP_TABLE_ID}`;
+        }
       });
   };
 
@@ -107,6 +113,20 @@ function App() {
           element={
             <>
               <h1>To-Do List</h1>
+              <button
+                type="button"
+                name="Desc"
+                onClick={(order) => setOrder(false)}
+              >
+                z-a
+              </button>
+              <button
+                type="button"
+                name="sort"
+                onClick={(order) => setOrder(true)}
+              >
+                a-z
+              </button>
               <AddTodoForm onAddTodo={addTodo} />
               {isLoading ? (
                 <p>Loading...</p>
