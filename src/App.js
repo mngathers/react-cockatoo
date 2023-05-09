@@ -76,9 +76,6 @@ function App() {
       .then((result) => {
         setTodoList((todoList) => [...todoList, result]);
         setOrder((order) => [...todoList, order]);
-        if (!order) {
-          const defaultURL = `https://api.airtable.com/v0/${process.env.REACT_APP_AIRTABLE_BASE_ID}/${process.env.REACT_APP_TABLE_ID}`;
-        }
       });
   };
 
@@ -103,7 +100,6 @@ function App() {
         }
       });
   }
-
   return (
     <BrowserRouter>
       <Routes>
