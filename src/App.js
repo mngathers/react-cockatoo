@@ -4,6 +4,8 @@ import React from "react";
 import AddTodoForm from "./components/AddTodoForm";
 import TodoList from "./components/TodoList";
 import styles from "./App.module.css";
+import Navigation from "./components/Navigation";
+import About from "./components/About";
 
 function App() {
   const [todoList, setTodoList] = React.useState([]);
@@ -108,6 +110,7 @@ function App() {
           exact
           element={
             <>
+              <Navigation />
               <h1>To-Do List</h1>
               <button
                 type="button"
@@ -132,7 +135,16 @@ function App() {
             </>
           }
         />
-        <Route path="/new" element={<h1>New Todo List</h1>} />
+        <Route
+          path="/new"
+          element={
+            <>
+              <Navigation />
+              <h1>New To-Do List</h1>
+            </>
+          }
+        />
+        <Route path="/about" element={<About />} />
       </Routes>
     </BrowserRouter>
   );
